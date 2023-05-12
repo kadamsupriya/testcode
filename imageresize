@@ -1,0 +1,108 @@
+class Test {
+
+$imageAarr = getimagesize($imageA);// inputs
+$imageBarr = getimagesize($imageB);//inputs
+
+function getWidthHeight($image){
+    $imagearr = getimagesize($image);
+    return $imgearr;
+}
+
+function checkmaxwidthheight($imageA, $imageB){
+  if($imageA>$imageB){
+      return $imageA;
+  }else{
+      return $imageB;
+  }
+}
+
+
+function resizeImage($sourceImage, $targetImage, $maxWidth, $maxHeight, $quality = 80)
+{
+list($origWidth, $origHeight, $type) = getimagesize($sourceImage);
+
+if ($type == 1)
+{
+    header ('Content-Type: image/gif');
+    $image = imagecreatefromgif($sourceImage);
+}
+elseif ($type == 2)
+{
+    header ('Content-Type: image/jpeg');
+    $image = imagecreatefromjpeg($sourceImage);
+}
+elseif ($type == 3)
+{
+    header ('Content-Type: image/png');
+    $image = imagecreatefrompng($sourceImage);
+}
+else
+{
+    header ('Content-Type: image/x-ms-bmp');
+    $image = imagecreatefromwbmp($sourceImage);
+}
+
+if ($maxWidth == 0)
+{
+    $maxWidth  = $origWidth;
+}
+
+if ($maxHeight == 0)
+{
+    $maxHeight = $origHeight;
+}
+
+// Calculate ratio of desired maximum sizes and original sizes.
+$widthRatio = $maxWidth / $origWidth;
+$heightRatio = $maxHeight / $origHeight;
+
+// Ratio used for calculating new image dimensions.
+$ratio = min($widthRatio, $heightRatio);
+
+// Calculate new image dimensions.
+$newWidth  = (int)$origWidth  * $ratio;
+$newHeight = (int)$origHeight * $ratio;
+
+$newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+$transparent = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
+imagefill($newImage, 0, 0, $transparent);
+imagesavealpha($newImage, true);
+
+
+imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+imagepng($newImage, $targetImage);
+
+imagedestroy($image);
+imagedestroy($newImage);
+
+return true;
+}
+}
+
+$obj = new Test();
+$imageAarr= $obj->getWidthHeight($imageA);
+$imageBarr= $obj->getWidthHeight($imageB);
+
+
+
+$imageAwidth =$imageAarr[0];
+$imageAheight =$imageAarr[1];
+
+$imageBwidth =$imageBarr[0];
+$imageBheight =$imageBarr[1];
+
+$imageBwidth = checkmaxwidthheight($imageAwidth, $imageBwidth);
+$imageBheight = checkmaxwidthheight($imageAheight, $imageBheight);
+
+$image = resizeImage($imageA, $ImageB, $imageBwidth, $imageBheight, $quality = 80)
+
+
+
+
+
+
+
+
+
+
